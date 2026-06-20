@@ -128,7 +128,7 @@ function abrirModal(id) {
                 if (tallaError) tallaError.classList.add("visible");
                 return;
             }
-            comprar(producto.nombre, tallaSeleccionada);
+            comprar(producto.nombre, tallaSeleccionada, producto.id, producto.precio);
         };
     }
 
@@ -180,9 +180,10 @@ async function comprar(nombre, talla, productoId = null, precio = 0) {
 
     // Intentamos registrar el pedido (no bloquea la compra si falla)
     try {
-        await fetch("/api/guardar_pedido.php", {
+        await fetch("/api/guardar-pedido", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({
                 producto_id: productoId,
                 nombre_producto: nombre,
