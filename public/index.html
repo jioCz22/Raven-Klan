@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAVEN </title>
+    <meta name="description" content="RAVEN — Ropa deportiva de disciplina y mentalidad. Oversize y sleeveless para entrenamiento extremo. Envíos a todo México.">
+
+    <!-- Favicon completo: tab, iOS, Android, PWA -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png de 180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#090909">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <!-- ► NUEVO: estilos extras v2 -->
+    <link rel="stylesheet" href="css/raven-extras.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+<body>
+    <div class="top-bar" id="topBar">
+
+    <!-- Se muestra cuando NO hay sesión iniciada -->
+    <button class="top-bar-btn btn-login-bar" id="btnAbrirLogin">
+        <i class="fa-solid fa-user"></i>
+        <span class="texto-completo">Iniciar sesión</span>
+    </button>
+
+    <!-- Se muestra cuando SÍ hay sesión iniciada (oculto por defecto) -->
+    <div class="top-bar-user" id="topBarUser">
+        <i class="fa-solid fa-circle-user"></i>
+        <span id="nombreUsuarioBar">Usuario</span>
+        <button class="btn-logout" id="btnLogout">Salir</button>
+    </div>
+
+    <button class="top-bar-btn" id="btnAbrirSoporte">
+        <i class="fa-solid fa-headset"></i>
+        <span class="texto-completo">Soporte</span>
+    </button>
+</div>
+
+    <header>
+        <nav>
+            <div class="logo-container">
+                <div class="logo-icono"></div>
+                <h1>RAVEN</h1>
+            </div>
+            <!-- Links desktop -->
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#destacados">Destacados</a></li>
+                <li><a href="#lookbook">Lookbook</a></li>
+                <li><a href="#coleccion">Colección</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <!-- Botón hamburguesa móvil -->
+            <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Menú fullscreen móvil -->
+    <div class="nav-fullscreen" id="navFullscreen">
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#destacados">Destacados</a></li>
+            <li><a href="#lookbook">Lookbook</a></li>
+            <li><a href="#coleccion">Colección</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <span class="nav-fullscreen-footer">FUEL THE FLIGHT // EMPOWER THE CLAN</span>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════ -->
+    <section id="inicio" class="hero">
+
+        <!-- SLIDES -->
+        <div class="hero-slider">
+            <div class="hero-slide activo" id="heroSlideVideo" style="background-image: url(assets/.jpg);">
+                <video class="hero-video" id="heroVideo" autoplay muted loop playsinline poster="assets/.jpg">
+                    <source src="assets/hero-entreno.mp4" type="video/mp4">
+                </video>
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="hero-slide" style="background-image: url(assets/.png);">
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="hero-slide" style="background-image: url(assets/.png);">
+                <div class="slide-overlay"></div>
+            </div>
+            <div class="hero-slide" style="background-image: url(assets/.png);">
+                <div class="slide-overlay"></div>
+            </div>
+        </div>
+
+        <!-- Scanlines decorativos -->
+        <div class="hero-scanlines" aria-hidden="true"></div>
+
+        <!-- Contenido central -->
+        <div class="hero-content">
+            <h2 class="anim-titulo">
+                <span class="glitch-word" data-text="DISCIPLINA">DISCIPLINA</span><br>
+                <span class="glitch-word" data-text="FUERZA">FUERZA</span><br>
+                <span class="glitch-word" data-text="MENTALIDAD">MENTALIDAD</span>
+            </h2>
+            <p class="anim-subtitulo">Más que ropa deportiva. Una identidad.</p>
+            <p class="hero-subtext">FUEL THE FLIGHT. EMPOWER THE CLAN.</p>
+            <a href="#coleccion" class="btn btn-hero">Ver Colección</a>
+        </div>
+
+        <!-- Flechas ocultas (drag/swipe/teclado) -->
+        <button class="slider-btn slider-prev" id="sliderPrev" aria-label="Anterior" style="display:none;"></button>
+        <button class="slider-btn slider-next" id="sliderNext" aria-label="Siguiente" style="display:none;"></button>
+
+        <!-- Dots -->
+        <div class="slider-dots" id="sliderDots"></div>
+
+        <!-- Barra de progreso -->
+        <div class="slider-progress">
+            <div class="slider-progress-bar" id="sliderProgressBar"></div>
+        </div>
+
+        <!-- Scroll hint -->
+        <div class="hero-scroll-hint" aria-hidden="true">
+            <div class="scroll-mouse"></div>
+            <span>Scroll</span>
+        </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         TICKER ANIMADO
+    ══════════════════════════════════════════════════════ -->
+    <div class="ticker-wrap" aria-hidden="true">
+        <div class="ticker-track">
+            <span>DROP 01</span>
+            <span>HEAVY COTTON</span>
+            <span>JAPAN CLAN</span>
+            <span>OVERSIZE FIT</span>
+            <span>ENVÍOS MÉXICO</span>
+            <span>FUEL THE FLIGHT</span>
+            <span>EMPOWER THE CLAN</span>
+            <span>RAVEN KLAN</span>
+            <!-- repetición para loop sin corte -->
+            <span>DROP 01</span>
+            <span>HEAVY COTTON</span>
+            <span>JAPAN CLAN</span>
+            <span>OVERSIZE FIT</span>
+            <span>ENVÍOS MÉXICO</span>
+            <span>FUEL THE FLIGHT</span>
+            <span>EMPOWER THE CLAN</span>
+            <span>RAVEN KLAN</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         DESTACADOS / PREMIUM
+    ══════════════════════════════════════════════════════ -->
+    <section id="destacados" class="seccion-premium-full">
+        <div class="liston-decorativo animar" style="width:100%;grid-column:1/-1;">
+            <div class="liston-track">
+                <span>NEW ARRIVALS // DROP 01</span>
+                <span>NEW ARRIVALS // DROP 01</span>
+                <span>NEW ARRIVALS // DROP 01</span>
+                <span>NEW ARRIVALS // DROP 01</span>
+            </div>
+        </div>
+
+        <div class="grid-layout-dos-columnas">
+            <div class="col-imagen-unica" style="background-image: url('assets/izquierdatota.png');"></div>
+
+            <div class="col-textos-renglones">
+                <div class="renglon-premium" style="background-image: url('assets/arriba.png');">
+                    <div class="sub-overlay"></div>
+                    <div class="contenido-txt">
+                        <h3>JAPAN CLAN</h3>
+                        <p>DROP 01 // HEAVY COTTON</p>
+                        <button onclick="comprar('Japan Clan Tee')" class="btn-shop-now">SHOP NOW</button>
+                    </div>
+                </div>
+
+                <div class="renglon-premium" style="background-image: url('assets/abajo.png');">
+                    <div class="sub-overlay"></div>
+                    <div class="contenido-txt">
+                        <h3>METAL LOGO</h3>
+                        <p>RAVEN COLLECTION // PIT CREW</p>
+                        <button onclick="comprar('Metal Logo Oversize')" class="btn-shop-now">SHOP NOW</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="liston-decorativo animar" style="width:100%;grid-column:1/-1;">
+            <div class="liston-track">
+                <span>RAVEN CLAN // HARD TRAINING.</span>
+                <span>RAVEN CLAN // HARD TRAINING.</span>
+                <span>RAVEN CLAN // HARD TRAINING.</span>
+                <span>RAVEN CLAN // HARD TRAINING.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         STATS / NÚMEROS DE IMPACTO
+    ══════════════════════════════════════════════════════ -->
+    <!--
+    <section class="seccion-stats" id="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-numero" data-target="100">0<span class="stat-acento">%</span></span>
+                <span class="stat-label">Algodón premium</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-numero" data-target="01">01<span class="stat-acento"> DROP</span></span>
+                <span class="stat-label">Colección activa</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-numero" data-target="32">32<span class="stat-acento">+</span></span>
+                <span class="stat-label">Ciudades con envío</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-numero" data-target="24">24<span class="stat-acento">h</span></span>
+                <span class="stat-label">Respuesta por WA</span>
+            </div>
+        </div>
+    </section>
+    -->
+
+    <!-- ══════════════════════════════════════════════════════
+         FILOSOFÍA
+    ══════════════════════════════════════════════════════ -->
+    <section id="filosofia" class="filosofia filosofia-wrapper">
+        <h2>LA FILOSOFÍA RAVEN</h2>
+        <div class="linea-decorativa"></div>
+        <p>
+            Raven representa a quienes entrenan cuando nadie los ve.
+            A quienes entienden que la disciplina vale más que la motivación.
+            A quienes no buscan ser vistos, sino ser temidos por su constancia.
+        </p>
+        <blockquote class="filosofia-quote">
+            <p>"El cuervo no vuela para ser admirado. Vuela porque es su naturaleza. Así entrena el Clan."</p>
+            <cite>— RAVEN KLAN, DROP 01</cite>
+        </blockquote>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         LÍNEA DIVISORA ANIMADA
+    ══════════════════════════════════════════════════════ -->
+    <div class="linea-roja-anim" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════
+         CÓMO COMPRAR
+    ══════════════════════════════════════════════════════ -->
+    <section id="como-comprar" class="como-comprar">
+        <div class="seccion-encabezado">
+            <h2>¿CÓMO COMPRAR?</h2>
+            <p>Tres pasos. Sin complicaciones.</p>
+        </div>
+        <div class="pasos-grid">
+            <div class="paso-card">
+                <span class="paso-numero">01</span>
+                <i class="fa-solid fa-magnifying-glass paso-icono"></i>
+                <h3>ELIGE</h3>
+                <p>Explora la colección y selecciona tu prenda y talla.</p>
+            </div>
+            <div class="paso-conector" aria-hidden="true">
+                <div class="paso-conector-inner"></div>
+            </div>
+            <div class="paso-card">
+                <span class="paso-numero">02</span>
+                <i class="fa-brands fa-whatsapp paso-icono"></i>
+                <h3>ESCRÍBENOS</h3>
+                <p>Confirma tu pedido por WhatsApp con un solo toque.</p>
+            </div>
+            <div class="paso-conector" aria-hidden="true">
+                <div class="paso-conector-inner"></div>
+            </div>
+            <div class="paso-card">
+                <span class="paso-numero">03</span>
+                <i class="fa-solid fa-box-open paso-icono"></i>
+                <h3>RECIBE</h3>
+                <p>Coordinamos tu pago y envío. Tu pedido llega a la puerta.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         BARRA COMPRA SEGURA
+    ══════════════════════════════════════════════════════ -->
+    <div class="compra-segura" aria-label="Garantías de compra">
+        <div class="compra-segura-grid">
+            <div class="compra-item">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Compra segura</span>
+            </div>
+           <!-- <div class="compra-item">
+                <i class="fa-solid fa-truck-fast"></i>
+                <span>Envío a todo México</span>
+            </div>-->
+            <div class="compra-item">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>Soporte por WhatsApp</span>
+            </div>
+            <div class="compra-item">
+                <i class="fa-solid fa-shirt"></i>
+                <span>Calidad garantizada</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         LOOKBOOK PLACEHOLDER (activar cuando haya imágenes)
+    ══════════════════════════════════════════════════════ -->
+    <!--
+    <section id="lookbook" class="lookbook-placeholder">
+        <div class="lp-header">
+            <h2>LOOKBOOK</h2>
+            <p>DROP 01 — Imágenes próximamente</p>
+        </div>
+        <div class="lp-grid">
+            <div class="lp-item lp-grande">
+                <i class="fa-solid fa-camera lp-icon"></i>
+                <span class="lp-caption">COMING SOON</span>
+            </div>
+            <div class="lp-item">
+                <i class="fa-solid fa-image lp-icon"></i>
+                <span class="lp-caption">DROP 01</span>
+            </div>
+            <div class="lp-item">
+                <i class="fa-solid fa-image lp-icon"></i>
+                <span class="lp-caption">JAPAN CLAN</span>
+            </div>
+            <div class="lp-item">
+                <i class="fa-solid fa-image lp-icon"></i>
+                <span class="lp-caption">HEAVY FIT</span>
+            </div>
+            <div class="lp-item">
+                <i class="fa-solid fa-image lp-icon"></i>
+                <span class="lp-caption">KLAN WEAR</span>
+            </div>
+        </div>
+    </section>
+    -->
+
+    <!-- ══════════════════════════════════════════════════════
+         COLECCIÓN / PRODUCTOS
+    ══════════════════════════════════════════════════════ -->
+    <section id="coleccion" class="productos">
+        <div class="seccion-encabezado">
+            <h2>COLECCIÓN</h2>
+            <p>Drop 01 // Hecho para entrenar duro</p>
+        </div>
+        <div class="buscador-contenedor">
+            <input type="text" id="buscador" placeholder="Buscar producto...">
+        </div>
+
+        <div class="filtros-categoria" id="filtrosCategoria">
+            <button class="filtro-btn activo" data-categoria="todos">TODOS</button>
+            <button class="filtro-btn" data-categoria="oversize">OVERSIZE</button>
+            <button class="filtro-btn" data-categoria="sleeveless">SLEEVELESS</button>
+        </div>
+
+        <div class="grid" id="productos-grid"></div>
+
+        <button class="btn-guia-tallas" id="btnGuiaTallas" type="button">
+            <i class="fa-solid fa-ruler"></i> ¿Qué talla soy?
+        </button>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL GUÍA DE TALLAS
+    ══════════════════════════════════════════════════════ -->
+    <div id="modalTallas" class="modal-overlay">
+        <div class="modal-content modal-tallas-content">
+            <span class="close-modal" onclick="cerrarModalTallas()">&times;</span>
+            <div class="modal-tallas-body">
+                <h3>GUÍA DE TALLAS</h3>
+                <p class="guia-subtexto">Medidas en centímetros. Corte oversize: si estás entre dos tallas, te recomendamos la más chica para un fit ajustado, o la más grande para un fit holgado.</p>
+                <table class="tabla-tallas">
+                    <thead>
+                        <tr>
+                            <th>Talla</th>
+                            <th>Pecho (cm)</th>
+                            <th>Largo (cm)</th>
+                            <th>Hombro a hombro (cm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>S</td><td>104</td><td>68</td><td>54</td></tr>
+                        <tr><td>M</td><td>110</td><td>70</td><td>57</td></tr>
+                        <tr><td>L</td><td>116</td><td>72</td><td>60</td></tr>
+                        <tr><td>XL</td><td>122</td><td>74</td><td>63</td></tr>
+                    </tbody>
+                </table>
+                <p class="guia-ayuda"><i class="fa-solid fa-circle-info"></i> ¿Dudas con tu talla? Escríbenos por WhatsApp y te ayudamos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         TESTIMONIOS
+    ══════════════════════════════════════════════════════ -->
+    <section id="testimonios" class="testimonios">
+        <div class="seccion-encabezado">
+            <h2>EL KLAN HABLA</h2>
+            <p>Los primeros en vestir RAVEN</p>
+        </div>
+
+        <div class="testimonios-grid">
+            <div class="testimonio-card">
+                <div class="testimonio-header">
+                    <div class="testimonio-avatar">R</div>
+                    <div class="testimonio-meta">
+                        <span class="testimonio-nombre">Raven Klan</span>
+                        <span class="testimonio-fecha">DROP 01 — 2026</span>
+                    </div>
+                </div>
+                <div class="estrellas">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="testimonio-texto">"Sé el primero en ser parte del clan."</p>
+                <span class="testimonio-autor">— PRIMER MIEMBRO</span>
+            </div>
+
+            <!-- Tarjeta CTA para reseñas -->
+            <div class="testimonio-card" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;border-style:dashed;border-color:#1f1f1f;">
+                <i class="fa-brands fa-instagram" style="font-size:1.6rem;color:#333;"></i>
+                <p style="color:#444;font-size:0.82rem;text-align:center;line-height:1.6;">
+                    ¿Ya tienes tu prenda RAVEN?<br>Comparte tu foto y etiquétanos.
+                </p>
+                <a href="https://www.instagram.com/ravenkklan" target="_blank" class="btn-cta-ig" style="padding:10px 22px;font-size:0.85rem;">
+                    <i class="fa-brands fa-instagram"></i> @RAVENKKLAN
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         ÚNETE AL KLAN (contacto mejorado)
+    ══════════════════════════════════════════════════════ -->
+    <section id="contacto" class="join-klan">
+        <div class="join-klan-inner">
+            <span class="join-eyebrow">Torreón, Coahuila — México</span>
+            <h2 class="join-titulo">ÚNETE<br>AL KLAN</h2>
+            <p class="join-subtitulo">
+                No es solo ropa. Es una decisión.<br>
+                Escríbenos y consigue tu drop antes de que se agote.
+            </p>
+            <div class="join-ctas">
+                <a href="https://wa.me/5218714701253?text=Hola%20RAVEN%2C%20quiero%20ser%20parte%20del%20Klan." target="_blank" class="btn-cta-wa">
+                    <i class="fa-brands fa-whatsapp"></i> Escríbenos
+                </a>
+                <a href="https://www.instagram.com/ravenkklan" target="_blank" class="btn-cta-ig">
+                    <i class="fa-brands fa-instagram"></i> Síguenos
+                </a>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- ══════════════════════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════════════════════ -->
+    <footer class="footer-klan">
+        <div class="footer-container">
+            <div class="footer-col col-marca">
+                <h2 class="footer-logo">RAVEN</h2>
+                <p class="footer-lema">FUEL THE FLIGHT. EMPOWER THE CLAN.</p>
+                <span class="footer-subtext">DISCIPLINA // FUERZA // MENTALIDAD</span>
+            </div>
+
+            <div class="footer-col col-contacto">
+                <h3>CONTACTO</h3>
+                <ul>
+                    <li><span class="detalle-contacto">Ubicación:</span> Torreón, Coahuila, Mx.</li>
+                    <li><span class="detalle-contacto">Soporte:</span> info@ravenklan.com</li>
+                </ul>
+                <div class="instagram-link-wrapper">
+                    <a href="https://www.instagram.com/ravenkklan?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="btn-instagram">
+                        <svg viewBox="0 0 24 24" class="icon-ig">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                        </svg>
+                        @RAVENKKLAN
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col col-envios">
+                <h3>ENVÍOS</h3>
+                <ul>
+                    <li><span class="detalle-contacto">Cobertura:</span> Entrega local en Torreón y envíos a todo México.</li>
+                    <li><span class="detalle-contacto">Tiempo estimado:</span> 1-2 días en Torreón // 3-6 días hábiles nacional.</li>
+                    <li><span class="detalle-contacto">Pago:</span> Se coordina directo por WhatsApp al confirmar tu pedido.</li>
+                </ul>
+            </div>
+
+            <div class="footer-col col-qr">
+                <h3>ESCANEA EL KLAN</h3>
+                <div class="qr-contenedor">
+                    <img src="assets/qr-code.png" alt="Código QR RAVEN" class="img-qr">
+                </div>
+                <p class="qr-ayuda">Acceso directo al catálogo digital</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 RAVEN. Hecho por Jioo Cz. En Proceso.</p>
+        </div>
+    </footer>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODAL PRODUCTO
+    ══════════════════════════════════════════════════════ -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModal()">&times;</span>
+            <div class="modal-body">
+                <div class="modal-img-container">
+                    <img id="modalImagen" src="" alt="Producto">
+                </div>
+                <div class="modal-info">
+                    <h3 id="modalTitulo">Producto</h3>
+                    <p id="modalDescripcion" class="descripcion">Descripción</p>
+                    <p id="modalPrecio" class="precio">$0 MXN</p>
+
+                    <div class="selector-tallas">
+                        <span class="tallas-label">TALLA</span>
+                        <div class="tallas-opciones" id="tallasOpciones">
+                            <button class="talla-btn" data-talla="S">S</button>
+                            <button class="talla-btn" data-talla="M">M</button>
+                            <button class="talla-btn" data-talla="L">L</button>
+                            <button class="talla-btn" data-talla="XL">XL</button>
+                        </div>
+                        <a href="#coleccion" class="link-guia-tallas" onclick="cerrarModal(); abrirModalTallas(); return false;">Ver guía de tallas</a>
+                        <p class="talla-error" id="tallaError">Selecciona una talla para continuar</p>
+                    </div>
+
+                    <button id="btnComprar" class="btn-comprar">COMPRAR POR WHATSAPP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+<!-- ══════════════════════════════════════════════════════
+     MODAL: LOGIN
+══════════════════════════════════════════════════════ -->
+<div id="modalLogin" class="modal-overlay auth-modal">
+    <div class="auth-box">
+        <span class="close-modal" onclick="cerrarAuthModal('modalLogin')">&times;</span>
+        <h2>INICIAR SESIÓN</h2>
+        <p class="auth-subtitulo">Accede a tu cuenta RAVEN</p>
+
+        <form class="auth-form" id="formLogin">
+            <label for="loginEmail">Correo electrónico</label>
+            <input type="email" id="loginEmail" required autocomplete="email">
+
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" required autocomplete="current-password">
+
+            <button type="submit" class="auth-submit" id="btnSubmitLogin">ENTRAR</button>
+            <div class="auth-msg" id="loginMsg"></div>
+        </form>
+
+        <p class="auth-switch">
+            ¿No tienes cuenta? <a onclick="cambiarAModal('modalLogin','modalRegistro')">Regístrate</a>
+        </p>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: REGISTRO
+══════════════════════════════════════════════════════ -->
+<div id="modalRegistro" class="modal-overlay auth-modal">
+    <div class="auth-box">
+        <span class="close-modal" onclick="cerrarAuthModal('modalRegistro')">&times;</span>
+        <h2>CREAR CUENTA</h2>
+        <p class="auth-subtitulo">Únete al Klan</p>
+
+        <form class="auth-form" id="formRegistro">
+            <label for="regNombre">Nombre completo</label>
+            <input type="text" id="regNombre" required autocomplete="name">
+
+            <label for="regEmail">Correo electrónico</label>
+            <input type="email" id="regEmail" required autocomplete="email">
+
+            <label for="regTelefono">Teléfono (WhatsApp)</label>
+            <input type="tel" id="regTelefono" required autocomplete="tel" placeholder="871 470 1253">
+
+            <label for="regPassword">Contraseña</label>
+            <input type="password" id="regPassword" required minlength="6" autocomplete="new-password">
+
+            <button type="submit" class="auth-submit" id="btnSubmitRegistro">CREAR CUENTA</button>
+            <div class="auth-msg" id="registroMsg"></div>
+        </form>
+
+        <p class="auth-switch">
+            ¿Ya tienes cuenta? <a onclick="cambiarAModal('modalRegistro','modalLogin')">Inicia sesión</a>
+        </p>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: PERFIL / HISTORIAL DE PEDIDOS
+     (se abre al hacer clic en el nombre de usuario en la barra)
+══════════════════════════════════════════════════════ -->
+<div id="modalPerfil" class="modal-overlay auth-modal">
+    <div class="auth-box">
+        <span class="close-modal" onclick="cerrarAuthModal('modalPerfil')">&times;</span>
+        <h2>MI CUENTA</h2>
+        <p class="auth-subtitulo" id="perfilEmail">correo@ejemplo.com</p>
+
+        <h3 style="font-size:0.9rem; letter-spacing:1px; color:#ccc; margin-top:10px;">
+            MIS PEDIDOS
+        </h3>
+        <div class="historial-pedidos" id="historialPedidos">
+            <p class="sin-pedidos">Cargando...</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: SOPORTE
+══════════════════════════════════════════════════════ -->
+<div id="modalSoporte" class="modal-overlay auth-modal">
+    <div class="auth-box">
+        <span class="close-modal" onclick="cerrarAuthModal('modalSoporte')">&times;</span>
+        <h2>SOPORTE</h2>
+        <p class="auth-subtitulo">Cuéntanos qué necesitas y te contactamos por correo</p>
+
+        <form class="auth-form" id="formSoporte">
+            <label for="soporteNombre">Nombre</label>
+            <input type="text" id="soporteNombre" required>
+
+            <label for="soporteEmail">Correo electrónico</label>
+            <input type="email" id="soporteEmail" required>
+
+            <label for="soporteAsunto">Asunto</label>
+            <input type="text" id="soporteAsunto" required placeholder="Ej. Problema con mi pedido">
+
+            <label for="soporteMensaje">Mensaje</label>
+            <textarea id="soporteMensaje" required placeholder="Describe tu duda o problema..."></textarea>
+
+            <button type="submit" class="auth-submit" id="btnSubmitSoporte">ENVIAR</button>
+            <div class="auth-msg" id="soporteMsg"></div>
+        </form>
+    </div>
+</div>
+
+
+ 
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/parche-script-comprar.js"></script>
+    <!-- ► NUEVO: JS extra para stats counter + mejoras -->
+    <script>
+    // ─── COUNTER-UP PARA STATS ────────────────────────────────
+    (function () {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                el.classList.add('contado');
+                observer.unobserve(el);
+            });
+        }, { threshold: 0.6 });
+
+        document.querySelectorAll('.stat-numero[data-target]').forEach(el => {
+            observer.observe(el);
+        });
+    })();
+
+    // ─── SCROLL REVEAL EXTRAS ─────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof ScrollReveal === 'undefined') return;
+        const sr = ScrollReveal();
+
+        sr.reveal('.stat-item', {
+            origin: 'bottom', distance: '25px',
+            duration: 700, interval: 100
+        });
+        sr.reveal('.lp-item', {
+            origin: 'bottom', distance: '20px',
+            duration: 600, interval: 80
+        });
+        sr.reveal('.join-titulo', {
+            origin: 'bottom', distance: '40px',
+            duration: 900
+        });
+        sr.reveal('.join-subtitulo', {
+            origin: 'bottom', distance: '20px',
+            duration: 700, delay: 200
+        });
+        sr.reveal('.join-ctas', {
+            origin: 'bottom', distance: '20px',
+            duration: 700, delay: 350
+        });
+        sr.reveal('.compra-item', {
+            origin: 'bottom', distance: '15px',
+            duration: 500, interval: 80
+        });
+        sr.reveal('.testimonio-card', {
+            origin: 'bottom', distance: '30px',
+            duration: 700, interval: 150
+        });
+    });
+    </script>
+
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('RAVEN SW activo'))
+      .catch(err => console.warn('SW error:', err));
+  }
+    </script>
+
+   <script src="auth.js"></script>
+</body>
+</html>

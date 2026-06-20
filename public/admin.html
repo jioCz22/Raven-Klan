@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAVEN — Panel Admin</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background:#0d0d0d; color:#eee;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        padding: 30px;
+    }
+    h1 { font-size: 1.6rem; letter-spacing: 1px; margin-bottom: 4px; color:#fff; }
+    .subt { color:#888; font-size:0.85rem; margin-bottom:30px; }
+    .tabs { display:flex; gap:10px; margin-bottom:20px; }
+    .tab-btn {
+        background:#1a1a1a; border:1px solid #333; color:#ccc;
+        padding:10px 18px; border-radius:5px; cursor:pointer;
+        font-size:0.85rem; font-weight:600;
+    }
+    .tab-btn.activo { background:#B11217; border-color:#B11217; color:#fff; }
+    table { width:100%; border-collapse: collapse; background:#141414; border-radius:6px; overflow:hidden; }
+    th, td { padding:12px 14px; text-align:left; font-size:0.85rem; border-bottom:1px solid #222; }
+    th { background:#1a1a1a; color:#999; font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.5px; }
+    tr:hover td { background:#181818; }
+    select { background:#1a1a1a; color:#fff; border:1px solid #333; border-radius:4px; padding:5px 8px; font-size:0.8rem; }
+    .estado-pendiente, .estado-abierto { color:#ffc107; }
+    .estado-confirmado, .estado-resuelto { color:#6fd98a; }
+    .estado-enviado, .estado-en_proceso { color:#6ea8fe; }
+    .estado-cancelado { color:#ff8a8d; }
+    .vacio { text-align:center; color:#666; padding:40px; }
+    .login-box { max-width:340px; margin:80px auto; background:#141414; padding:30px; border-radius:8px; border:1px solid #333; }
+    .login-box input { width:100%; padding:10px; margin-top:6px; margin-bottom:14px; background:#1a1a1a; border:1px solid #333; color:#fff; border-radius:4px; }
+    .login-box button { width:100%; padding:11px; background:#B11217; border:none; color:#fff; border-radius:4px; cursor:pointer; font-weight:600; }
+    .error-login { color:#ff8a8d; font-size:0.8rem; margin-top:8px; }
+</style>
+</head>
+<body>
+
+<div id="appAdmin">
+    <p class="vacio">Cargando...</p>
+</div>
+
+<script>
+const API_BASE = "/api";
+const ADMIN_BASE = "/admin";
+
+async function verificarAcceso() {
+    const resp = await fetch(`${API_BASE}/sesion-actual`, { credentials: "include" });
+    const data = await resp.json();
+
+    if (data.ok && data.autenticado && data.usuario.rol === "admin") {
+        renderPanel();
+    } else {
+        renderLoginAdmin();
+    }
+}
+
+function renderLoginAdmin() {
+    document.getElementById("appAdmin").innerHTML = `
+        <div class="login-box">
+            <h1>RAVEN ADMIN</h1>
+            <p class="subt">Inicia sesión con tu cuenta de administrador</p>
+            <form id="formLoginAdmin">
+                <label>Correo</label>
+                <input type="email" id="adEmail" required>
+                <label>Contraseña</label>
+                <input type="password" id="adPass" required>
+                <button type="submit">ENTRAR</button>
+                <div class="error-login" id="adError"></div>
+            </form>
+        </div>
+    `;
+
+    document.getElementById("formLoginAdmin").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("adEmail").value;
+        const password = document.getElementById("adPass").value;
+
+        const resp = await fetch(`${API_BASE}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ email, password })
+        });
+        const data = await resp.json();
+
+        if (!data.ok) {
+            document.getElementById("adError").textContent = data.error;
+            return;
+        }
+        if (data.usuario.rol !== "admin") {
+            document.getElementById("adError").textContent = "Esta cuenta no tiene permisos de administrador";
+            return;
+        }
+        renderPanel();
+    });
+}
+
+function renderPanel() {
+    document.getElementById("appAdmin").innerHTML = `
+        <h1>RAVEN — Panel Admin</h1>
+        <p class="subt">Pedidos y tickets de soporte</p>
+        <div class="tabs">
+            <button class="tab-btn activo" id="tabPedidos">Pedidos</button>
+            <button class="tab-btn" id="tabTickets">Soporte</button>
+        </div>
+        <div id="contenidoTab"></div>
+    `;
+
+    document.getElementById("tabPedidos").addEventListener("click", () => cambiarTab("pedidos"));
+    document.getElementById("tabTickets").addEventListener("click", () => cambiarTab("tickets"));
+
+    cambiarTab("pedidos");
+}
+
+function cambiarTab(tab) {
+    document.getElementById("tabPedidos").classList.toggle("activo", tab === "pedidos");
+    document.getElementById("tabTickets").classList.toggle("activo", tab === "tickets");
+    tab === "pedidos" ? cargarPedidos() : cargarTickets();
+}
+
+async function cargarPedidos() {
+    const cont = document.getElementById("contenidoTab");
+    cont.innerHTML = `<p class="vacio">Cargando pedidos...</p>`;
+
+    const resp = await fetch(`${ADMIN_BASE}/pedidos`, { credentials: "include" });
+    const data = await resp.json();
+
+    if (!data.ok || data.pedidos.length === 0) {
+        cont.innerHTML = `<p class="vacio">No hay pedidos todavía.</p>`;
+        return;
+    }
+
+    cont.innerHTML = `
+        <table>
+            <thead><tr>
+                <th>Fecha</th><th>Cliente</th><th>Producto</th><th>Talla</th>
+                <th>Precio</th><th>Estado</th>
+            </tr></thead>
+            <tbody>
+                ${data.pedidos.map(p => `
+                    <tr>
+                        <td>${new Date(p.creado_en).toLocaleDateString('es-MX')}</td>
+                        <td>${p.cliente_nombre || '— (sin cuenta)'}</td>
+                        <td>${p.nombre_producto}</td>
+                        <td>${p.talla || '—'}</td>
+                        <td>$${parseFloat(p.precio).toFixed(2)}</td>
+                        <td>
+                            <select class="estado-${p.estado}" onchange="cambiarEstado('pedido', ${p.id}, this.value)">
+                                ${['pendiente','confirmado','enviado','cancelado'].map(e =>
+                                    `<option value="${e}" ${e === p.estado ? 'selected' : ''}>${e}</option>`
+                                ).join('')}
+                            </select>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+async function cargarTickets() {
+    const cont = document.getElementById("contenidoTab");
+    cont.innerHTML = `<p class="vacio">Cargando tickets...</p>`;
+
+    const resp = await fetch(`${ADMIN_BASE}/tickets`, { credentials: "include" });
+    const data = await resp.json();
+
+    if (!data.ok || data.tickets.length === 0) {
+        cont.innerHTML = `<p class="vacio">No hay tickets de soporte.</p>`;
+        return;
+    }
+
+    cont.innerHTML = `
+        <table>
+            <thead><tr>
+                <th>Fecha</th><th>Nombre</th><th>Correo</th><th>Asunto</th>
+                <th>Mensaje</th><th>Estado</th>
+            </tr></thead>
+            <tbody>
+                ${data.tickets.map(t => `
+                    <tr>
+                        <td>${new Date(t.creado_en).toLocaleDateString('es-MX')}</td>
+                        <td>${t.nombre}</td>
+                        <td>${t.email}</td>
+                        <td>${t.asunto}</td>
+                        <td style="max-width:280px;">${t.mensaje}</td>
+                        <td>
+                            <select class="estado-${t.estado}" onchange="cambiarEstado('ticket', ${t.id}, this.value)">
+                                ${['abierto','en_proceso','resuelto'].map(e =>
+                                    `<option value="${e}" ${e === t.estado ? 'selected' : ''}>${e}</option>`
+                                ).join('')}
+                            </select>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+async function cambiarEstado(tipo, id, estado) {
+    await fetch(`${ADMIN_BASE}/actualizar-estado`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ tipo, id, estado })
+    });
+}
+
+verificarAcceso();
+</script>
+
+</body>
+</html>
