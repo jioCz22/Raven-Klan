@@ -24,26 +24,22 @@
     <script src="https://unpkg.com/scrollreveal"></script>
 </head>
 <body>
+    <!-- TOP BAR: solo visible en móvil -->
     <div class="top-bar" id="topBar">
-
-    <!-- Se muestra cuando NO hay sesión iniciada -->
-    <button class="top-bar-btn btn-login-bar" id="btnAbrirLogin">
-        <i class="fa-solid fa-user"></i>
-        <span class="texto-completo">Iniciar sesión</span>
-    </button>
-
-    <!-- Se muestra cuando SÍ hay sesión iniciada (oculto por defecto) -->
-    <div class="top-bar-user" id="topBarUser">
-        <i class="fa-solid fa-circle-user"></i>
-        <span id="nombreUsuarioBar">Usuario</span>
-        <button class="btn-logout" id="btnLogout">Salir</button>
+        <button class="top-bar-btn btn-login-bar" id="btnAbrirLogin">
+            <i class="fa-solid fa-user"></i>
+            <span>Iniciar sesión</span>
+        </button>
+        <div class="top-bar-user" id="topBarUser">
+            <i class="fa-solid fa-circle-user"></i>
+            <span id="nombreUsuarioBar">Usuario</span>
+            <button class="btn-logout" id="btnLogout">Salir</button>
+        </div>
+        <button class="top-bar-btn" id="btnAbrirSoporte">
+            <i class="fa-solid fa-headset"></i>
+            <span>Soporte</span>
+        </button>
     </div>
-
-    <button class="top-bar-btn" id="btnAbrirSoporte">
-        <i class="fa-solid fa-headset"></i>
-        <span class="texto-completo">Soporte</span>
-    </button>
-</div>
 
     <header>
         <nav>
@@ -59,6 +55,22 @@
                 <li><a href="#coleccion">Colección</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
+            <!-- Acciones desktop (login + soporte integrados en nav) -->
+            <div class="nav-acciones">
+                <button class="top-bar-btn btn-login-bar" id="btnAbrirLoginDesktop">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Iniciar sesión</span>
+                </button>
+                <div class="top-bar-user" id="topBarUserDesktop">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span id="nombreUsuarioBarDesktop">Usuario</span>
+                    <button class="btn-logout" id="btnLogoutDesktop">Salir</button>
+                </div>
+                <button class="top-bar-btn btn-soporte-nav" id="btnAbrirSoporteDesktop">
+                    <i class="fa-solid fa-headset"></i>
+                    <span>Soporte</span>
+                </button>
+            </div>
             <!-- Botón hamburguesa móvil -->
             <button class="hamburger" id="hamburger" aria-label="Abrir menú">
                 <span></span>
@@ -766,5 +778,41 @@
     </script>
 
    <script src="auth.js"></script>
+   <script>
+   // Bridge: botones del nav desktop → mismos modales que auth.js
+   document.getElementById("btnAbrirLoginDesktop")?.addEventListener("click", () => abrirAuthModal("modalLogin"));
+   document.getElementById("btnAbrirSoporteDesktop")?.addEventListener("click", () => {
+       abrirAuthModal("modalSoporte");
+       if (window.usuarioActual) {
+           document.getElementById("soporteNombre").value = window.usuarioActual.nombre || "";
+       }
+   });
+   document.getElementById("btnLogoutDesktop")?.addEventListener("click", async () => {
+       await fetch("/api/logout", { method: "POST" });
+       window.usuarioActual = null;
+       actualizarBarraSegunSesion(null);
+   });
+   document.getElementById("nombreUsuarioBarDesktop")?.addEventListener("click", () => {
+       abrirAuthModal("modalPerfil");
+       cargarMisPedidos();
+   });
+
+   // Extender actualizarBarraSegunSesion para sincronizar AMBAS barras
+   const _origActualizar = window.actualizarBarraSegunSesion;
+   window.actualizarBarraSegunSesion = function(usuario) {
+       _origActualizar(usuario);
+       const btnD   = document.getElementById("btnAbrirLoginDesktop");
+       const boxD   = document.getElementById("topBarUserDesktop");
+       const nombreD = document.getElementById("nombreUsuarioBarDesktop");
+       if (usuario) {
+           if (btnD) btnD.style.display = "none";
+           if (boxD) boxD.classList.add("activo");
+           if (nombreD) { nombreD.textContent = usuario.nombre; nombreD.style.cursor = "pointer"; }
+       } else {
+           if (btnD) btnD.style.display = "flex";
+           if (boxD) boxD.classList.remove("activo");
+       }
+   };
+   </script>
 </body>
 </html>

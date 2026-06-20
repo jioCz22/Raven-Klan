@@ -24,16 +24,73 @@ header {
     width: 100%;
     top: 0;
     z-index: 100;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0));
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.1));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: none;
+}
+
+/* Borde superior rojo — línea fija siempre visible */
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        #6b0508 5%,
+        #B11217 20%,
+        #ff2028 50%,
+        #B11217 80%,
+        #6b0508 95%,
+        transparent 100%
+    );
+    box-shadow: 0 0 10px rgba(177, 18, 23, 0.8), 0 0 25px rgba(177, 18, 23, 0.4);
+    z-index: 1;
+}
+
+/* Borde inferior rojo — aparece con scroll, con animación de brillo */
+header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(177, 18, 23, 0.3) 10%,
+        #B11217 40%,
+        #ff2028 50%,
+        #B11217 60%,
+        rgba(177, 18, 23, 0.3) 90%,
+        transparent 100%
+    );
+    opacity: 0;
+    box-shadow: 0 0 8px rgba(177, 18, 23, 0.6), 0 0 20px rgba(177, 18, 23, 0.3);
+    transition: opacity 0.4s ease;
+    z-index: 1;
+    animation: borderShimmer 3s ease-in-out infinite;
+}
+
+@keyframes borderShimmer {
+    0%, 100% { filter: brightness(1); }
+    50%       { filter: brightness(1.6) drop-shadow(0 0 6px #ff2028); }
 }
 
 header.scrolled {
-    background: #090909;
-    box-shadow: 0 4px 30px rgba(177, 18, 23, .15);
-    border-bottom: 1px solid rgba(177, 18, 23, 0.2);
+    background: rgba(9, 9, 9, 0.97);
+    box-shadow:
+        0 8px 32px rgba(177, 18, 23, 0.18),
+        0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+header.scrolled::after {
+    opacity: 1;
 }
 
 nav {
@@ -56,18 +113,27 @@ nav {
 }
 
 .logo-icono {
-    width: 35px;
-    height: 35px;
+    width: 44px;
+    height: 44px;
     background: url('../assets/logo-cuervo.png') center/cover no-repeat;
     background-color: #fff;
     border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(177,18,23,0.4), 0 2px 12px rgba(0,0,0,0.6);
+    flex-shrink: 0;
 }
 
 nav h1 {
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 3px;
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: #fff;
+}
+
+/* ── Acciones de sesión integradas en nav (desktop) ── */
+.nav-acciones {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* Links desktop */
@@ -1954,7 +2020,7 @@ nav a:hover {
 .logo-icono {
     width: 52px;          /* era 38px */
     height: 52px;
-    background: url('../assets/Logo.png') center/contain no-repeat;
+    background: url('../assets/apple-touch-icon.png\ de\ 180x180.png') center/contain no-repeat;
     border-radius: 0;
     filter: 
         drop-shadow(0 0 12px rgba(177, 18, 23, 0.6))  /* halo rojo */

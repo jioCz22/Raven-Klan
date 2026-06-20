@@ -1,34 +1,30 @@
 /* ============================================================
    RAVEN — Barra superior (top bar) + Modales de Login y Soporte
-   Este archivo se carga DESPUÉS de style.css y raven-extras.css
    ============================================================ */
 
-/* --- TOP BAR --- */
-/* Esta barra vive ARRIBA del header. Por eso el header (que es
-   'position: fixed; top:0') necesita moverse hacia abajo el alto
-   exacto de esta barra. Eso se hace con la variable --topbar-h
-   y se aplica más abajo a 'header'. */
 :root {
-    --topbar-h: 40px;
+    --topbar-h: 0px; /* Desktop: top-bar oculta, no ocupa espacio */
 }
 
+/* ── TOP BAR (solo mobile) ── */
 .top-bar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--topbar-h);
+    height: 42px;
     background: #000;
-    border-bottom: 1px solid rgba(177, 18, 23, 0.25);
-    display: flex;
+    border-bottom: 1px solid rgba(177, 18, 23, 0.3);
+    display: none; /* oculta en desktop */
     align-items: center;
     justify-content: flex-end;
-    gap: 10px;
-    padding: 0 20px;
-    z-index: 200; /* por encima del header (z-index:100) */
+    gap: 8px;
+    padding: 0 16px;
+    z-index: 200;
     font-family: 'Poppins', sans-serif;
 }
 
+/* ── Botones compartidos (top-bar mobile + nav desktop) ── */
 .top-bar-btn {
     background: transparent;
     border: none;
@@ -37,21 +33,20 @@
     font-weight: 600;
     letter-spacing: 0.5px;
     cursor: pointer;
-    padding: 6px 14px;
-    border-radius: 4px;
+    padding: 7px 14px;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     gap: 6px;
     transition: all 0.25s ease;
+    white-space: nowrap;
 }
 
-.top-bar-btn i {
-    font-size: 0.8rem;
-}
+.top-bar-btn i { font-size: 0.8rem; }
 
 .top-bar-btn:hover {
     color: #fff;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.07);
 }
 
 .top-bar-btn.btn-login-bar {
@@ -59,11 +54,20 @@
     background: #B11217;
 }
 
-.top-bar-btn.btn-login-bar:hover {
-    background: #8d0e12;
+.top-bar-btn.btn-login-bar:hover { background: #8d0e12; }
+
+/* Soporte en nav desktop: borde sutil */
+.top-bar-btn.btn-soporte-nav {
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #ccc;
+}
+.top-bar-btn.btn-soporte-nav:hover {
+    border-color: #B11217;
+    color: #fff;
+    background: rgba(177,18,23,0.08);
 }
 
-/* Cuando el usuario ya inició sesión, mostramos su nombre en vez del botón */
+/* Usuario logueado */
 .top-bar-user {
     display: none;
     align-items: center;
@@ -71,20 +75,20 @@
     color: #fff;
     font-size: 0.75rem;
     font-weight: 600;
+    cursor: default;
 }
 
-.top-bar-user.activo {
-    display: flex;
-}
+.top-bar-user.activo { display: flex; }
 
 .top-bar-user .btn-logout {
     background: none;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.18);
     color: #aaa;
     font-size: 0.7rem;
     padding: 4px 10px;
     border-radius: 4px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .top-bar-user .btn-logout:hover {
@@ -92,22 +96,33 @@
     border-color: #B11217;
 }
 
-/* Empuja TODO el sitio hacia abajo el alto de la barra,
-   para que la barra nunca tape el header ni el contenido */
-header {
-    top: var(--topbar-h) !important;
+/* ── DESKTOP: top-bar oculta, nav-acciones visible ── */
+@media (min-width: 768px) {
+    :root { --topbar-h: 0px; }
+
+    .top-bar { display: none !important; }
+    body { padding-top: 0; }
+
+    /* header ya no necesita empujarse */
+    header { top: 0 !important; }
+
+    .nav-acciones { display: flex; }
 }
 
-body {
-    padding-top: var(--topbar-h);
+/* ── MOBILE: top-bar visible, nav-acciones oculta ── */
+@media (max-width: 767px) {
+    :root { --topbar-h: 42px; }
+
+    .top-bar { display: flex; }
+
+    body { padding-top: var(--topbar-h); }
+
+    header { top: var(--topbar-h) !important; }
+
+    .nav-acciones { display: none !important; }
 }
 
-/* En móvil achicamos un poco la barra y los textos */
-@media (max-width: 600px) {
-    :root { --topbar-h: 44px; }
-    .top-bar-btn span.texto-completo { display: none; }
-    .top-bar-btn { padding: 6px 10px; }
-}
+
 
 /* ============================================================
    MODALES (Login / Registro / Soporte)
