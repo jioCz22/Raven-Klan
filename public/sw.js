@@ -1,10 +1,12 @@
-const CACHE = 'raven-v1';
+const CACHE = 'raven-v2'; // ← solo sube este número con cada deploy
 const ASSETS = [
   '/',
   '/index.html',
   '/css/style.css',
   '/css/raven-extras.css',
+  '/css/auth.css',
   '/js/script.js',
+  '/js/auth.js',
   '/assets/Logo.png',
 ];
 
@@ -16,7 +18,7 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// Activar: borra cachés viejas
+// Activar: borra cachés viejas automáticamente
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -26,9 +28,16 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// Fetch: sirve desde caché, si falla va a red
+// Fetch: red primero, si falla usa caché (siempre muestra lo más nuevo)
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        // Guarda la versión nueva en caché
+        const copy = response.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+        return response;
+      })
+      .catch(() => caches.match(e.request)) // sin internet → usa caché
   );
 });
