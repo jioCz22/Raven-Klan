@@ -1,4 +1,4 @@
-const CACHE = 'raven-v3'; // ← solo sube este número con cada deploy
+const CACHE = 'raven-v4'; // ← solo sube este número con cada deploy
 const ASSETS = [
   '/',
   '/index.html',
