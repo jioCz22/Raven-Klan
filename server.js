@@ -43,10 +43,27 @@ app.use(session({
   }
 }));
 
-// ── Servir el sitio estático (tu index.html, css, js, assets) ──
-// Así NO necesitas Render Static Site por separado: el mismo
-// Web Service sirve tu tienda Y el backend.
-app.use(express.static(path.join(__dirname, 'public')));
+// ── Servir el sitio estático con control de caché ──
+// HTML nunca se cachea → el navegador siempre pide la versión más nueva
+// CSS y JS se invalidan con ?v=X en los links del HTML
+app.use(express.static(path.join(__dirname, 'public'), {
+  etag: true,
+  lastModified: true,
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      // HTML siempre fresco — nunca guardado en caché
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    } else if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
+      // CSS y JS: el navegador revalida antes de usar la copia en caché
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    } else {
+      // Imágenes y otros assets: caché de 7 días (cambia el nombre del archivo para invalidar)
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+    }
+  }
+}));
 
 // ── Rutas de la API (cada archivo = lo que antes era un .php) ──
 app.use('/api/registro', require('./routes/registro'));
@@ -65,6 +82,10 @@ app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/admin')) {
     return next();
   }
+  // El index.html también se sirve sin caché
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
